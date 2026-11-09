@@ -1,0 +1,20 @@
+diff --git a/src/analysis/slices.rs b/src/analysis/slices.rs
+index 0e5ed29..0f66f79 100644
+--- a/src/analysis/slices.rs
++++ b/src/analysis/slices.rs
+@@ -348,7 +348,14 @@ impl FunctionSlices {
+                     // If this function has a prologue but no epilogue, and this
+                     // instruction is a bctr, we can assume it's an unrecovered
+                     // jump table and continue analysis.
+-                    if self.prologue.is_some() && self.epilogue.is_none() {
++                    // GN2E70: ProDG/GCC sjlj-EH functions end in a bctr after restoring r1
++                    // with `lwz r1, d(rX)`, which is not detected as an epilogue. Don't
++                    // continue past a known function end or into a known function.
++                    if self.prologue.is_some()
++                        && self.epilogue.is_none()
++                        && !matches!(function_end, Some(end) if next_addr >= end)
++                        && self.is_known_function(known_functions, next_addr).is_none()
++                    {
+                         log::debug!("Assuming unrecovered jump table {:#010X}", next_addr);
+                         self.branches.insert(ins_addr, vec![next_addr]);
+                         if self.add_block_start(next_addr) {

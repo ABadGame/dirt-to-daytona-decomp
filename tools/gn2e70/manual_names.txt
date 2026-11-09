@@ -1,0 +1,12 @@
+# Manually identified symbols: ADDRESS NAME  # evidence
+# Applied by tools/gn2e70/apply_names.py (only renames auto-generated fn_/lbl_ symbols).
+80041010 OSPanic               # calls OSDisableInterrupts, vprintf, OSReport, PPCHalt; follows OSReport
+8003C1C4 __builtin_new         # ProDG libsn: panics "You must define an operator new"
+8003C1F8 __builtin_vec_new     # "... operator new[]"
+8003C22C __builtin_delete      # "... operator delete"
+8003C260 __builtin_vec_delete  # "... operator delete[]"
+8003C294 __default_terminate   # initial value of __terminate_func (0x8024F768)
+8003C2A4 __terminate           # calls through __terminate_func
+8024F768 __terminate_func      # .data pointer, initialized to __default_terminate
+8003C4C4 __sjthrow             # GCC 2.95 sjlj throw: walks dynamic handler chain, else __terminate
+8003C678 __sjpopnthrow         # pops a handler then tail-calls __sjthrow

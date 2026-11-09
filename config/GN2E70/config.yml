@@ -1,0 +1,27 @@
+# NASCAR: Dirt to Daytona (USA) - GameCube - GN2E70
+# See config.example.yml for documentation.
+object_base: orig/GN2E70
+object: sys/main.dol
+hash: 729179d684034f46e5f4e562244ad1996e390a93
+symbols: config/GN2E70/symbols.txt
+splits: config/GN2E70/splits.txt
+# Linker/compiler version is not yet confirmed (see README).
+mw_comment_version: 10
+detect_objects: true
+detect_strings: true
+write_asm: true
+# ProDG stack/arena layout (see the template).
+ldscript_template: config/GN2E70/ldscript.tpl
+
+# ProDG addresses .sdata2 through r13 (_SDA_BASE_), not r2. The Metrowerks linker
+# would rewrite these to r2-relative, so keep them as raw offsets until the link
+# step moves to ProDG's ngcld (see README).
+block_relocations:
+- target: .sdata2:0x80314CA0
+  end: .sdata2:0x80315E3F
+# __start: ProDG's _SDA2_BASE_ (r2, unused by game code) and the .sbss end address
+# differ from what the Metrowerks linker generates.
+- source: .init:0x80003108
+  end: .init:0x80003110
+- source: .init:0x80003154
+  end: .init:0x8000315C
