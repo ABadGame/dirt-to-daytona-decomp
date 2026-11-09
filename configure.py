@@ -249,7 +249,12 @@ cflags_rel = [
     "-sdata2 0",
 ]
 
-config.linker_version = "GC/1.3.2"
+config.linker_version = "GC/1.3.2"  # still used to compile Metrowerks (SDK) objects
+
+# GN2E70 was linked with SN Systems ProDG. ngcld resolves every small-data reference
+# through r13 like the original, so no relocations need blocking. See README.
+config.prodg_linker_version = "3.5"
+config.prodg_ldscript = Path("config") / config.version / "ngcld.ld"
 
 
 # Helper function for Dolphin libraries

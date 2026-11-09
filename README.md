@@ -10,8 +10,9 @@ port is a later, separate step: it needs replacements for the GameCube hardware 
 
 ## Status
 
-- `ninja` splits the DOL and relinks it into a **byte-identical `main.dol`**
-  (SHA-1 `729179d684034f46e5f4e562244ad1996e390a93`).
+- `ninja` splits the DOL and relinks it with ProDG's own linker (`ngcld`) into a
+  **byte-identical `main.dol`** (SHA-1 `729179d684034f46e5f4e562244ad1996e390a93`).
+  No relocations are blocked, so every address reference is a real symbol reference.
 - **10,614 functions** were found automatically. **888 are named**: the Dolphin SDK
   (about 75%, 62% and 86% of the bytes in its three blocks) and the ProDG/GCC runtime,
   along with ~300 SDK data objects. None are decompiled yet.
@@ -132,26 +133,34 @@ These let the template (built around Metrowerks) handle a ProDG binary.
    its function's source file. The `.dtors` entries point back to low addresses, which
    makes the link order impossible to resolve. The section is named `.ctdt` so dtk
    leaves it as one unit for now.
-5. **Blocked relocations** (`block_relocations` in `config.yml`):
-   - everything that targets `.sdata2`. ProDG reaches it through `r13`, but the Metrowerks
-     linker would rewrite those ~310 instructions to use `r2`.
-   - the `__start` loads of `_SDA2_BASE_` and of the `.sbss` end address, which the
-     Metrowerks linker generates differently.
-
-   The proper fix is to link with ProDG's `ngcld.exe` (in `build/compilers/ProDG/*`)
-   instead of `mwldeppc.exe`. Then these blocks can go, and `.ctdt` can be split into
-   real `.ctors`/`.dtors` input sections.
-6. **Unique names for per-file statics.** Some SDK files each have a static with the same
+5. **Unique names for per-file statics.** Some SDK files each have a static with the same
    name (`ResetFunctionInfo`, `BootInfo`). With every function still in one object,
-   identical local names make dtk split the data sections and crash the Metrowerks linker.
+   identical local names make dtk split the data sections, which broke the link.
    They're temporarily named `ResetFunctionInfo_OSMemory`, `ResetFunctionInfo_SISteering`,
    `BootInfo_OS` and `BootInfo_DVDFs`, and can go back to the original names once the code
    is split into real files.
-7. **Linker script template.** [config/GN2E70/ldscript.tpl](config/GN2E70/ldscript.tpl)
-   reproduces ProDG's stack and arena layout (`_stack_end = 0x80315E60`,
-   `_stack_addr = 0x80375E60`, `__ArenaLo = 0x80375E80`, no debugger stack). Once
-   `OSInit` was named, dtk started emitting relocations to these symbols, and the
-   Metrowerks default layout put them in different places.
+
+## Linking with ngcld
+
+The main DOL is linked with SN Systems `ngcld` (the ProDG linker, version 1.0.10.887 in
+ProDG 3.5), not Metrowerks `mwldeppc`. The Metrowerks linker reaches `.sdata2` through
+`r2`, so matching with it meant blocking ~310 relocations plus the `__start` references to
+`_SDA2_BASE_` and the stack and arena symbols. ngcld reaches `.sdata`, `.sbss` and
+`.sdata2` through `r13` like the original, so those blocks are gone.
+
+- [config/GN2E70/ngcld.ld](config/GN2E70/ngcld.ld): GNU `ld`-style script. Sections are
+  laid out back to back from `0x80003100`, so the build still links when code changes
+  size. `_SDA_BASE_` (`.sdata` + `0x8000`), `_SDA2_BASE_` (`_SDA_BASE_` + `0x10000`) and
+  the stack and arena symbols (`_stack_end = 0x80315E60`, `_stack_addr = 0x80375E60`,
+  `__ArenaLo = 0x80375E80`) are computed from the layout, matching the original.
+- [tools/gn2e70/ngcld.py](tools/gn2e70/ngcld.py): ninja wrapper. It sets `SN_NGC_PATH`,
+  and because ngcld can't read response files, it writes the object list into an
+  `INPUT(...)` block at the top of a generated script. (`GROUP(...)` doesn't work here:
+  ngcld treats grouped files like libraries and only pulls in referenced objects.)
+- `configure.py` sets `config.prodg_linker_version = "3.5"` and `config.prodg_ldscript`.
+  `tools/project.py` then links the main DOL with a `link_ngcld` rule instead of mwld.
+  Metrowerks compilers are still used for any SDK objects that get compiled.
+- Map files aren't produced on this path yet: `--print-map` printed nothing in testing.
 
 ## Naming tools
 
@@ -200,7 +209,10 @@ All of these live in `tools/gn2e70/` and run from the project root after a build
    tentative choice. Keep adding `prodg_probe.py` probes as game functions get
    decompiled. The next step that depends on this is building game code with ProDG
    inside `configure.py`.
-4. **ProDG link step:** switch from `mwldeppc` to `ngcld` and remove workaround 5.
+4. ~~**ProDG link step:** switch from `mwldeppc` to `ngcld` and drop the blocked
+   relocations.~~ Done. A possible follow-up is splitting `.ctdt` back into real
+   `.ctors`/`.dtors`, though that's limited by how dtk assigns constructor entries to
+   source files, not by the linker.
 5. **Split the game code:** use the leftover assert/debug strings (`dash.cpp`, `race.cpp`…)
    and the `.ctors` entries (one per C++ file with static initializers) to find source-file
    boundaries and name classes (`RaceSummaryOverlay`, …).

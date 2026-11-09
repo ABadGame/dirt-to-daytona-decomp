@@ -175,6 +175,11 @@ class ProjectConfig:
             None  # List of precompiled headers
         )
         self.linker_version: Optional[str] = None  # mwld version
+        # GN2E70: link the main DOL with SN Systems ngcld (ProDG) instead of mwld.
+        # Set both to enable: a folder name under build/compilers/ProDG, and a GNU-style
+        # linker script. RELs (if any) still use mwld.
+        self.prodg_linker_version: Optional[str] = None
+        self.prodg_ldscript: Optional[Path] = None
         self.version: Optional[str] = None  # Version name
         self.warn_missing_config: bool = False  # Warn on missing unit configuration
         self.warn_missing_source: bool = False  # Warn on missing source file
@@ -732,6 +737,34 @@ def generate_build_ninja(
     )
     n.newline()
 
+    # ngcld (SN Systems ProDG linker), used for the main DOL when configured
+    use_ngcld = config.prodg_linker_version is not None and config.prodg_ldscript is not None
+    ngcld_implicit: List[Optional[Path]] = []
+    if use_ngcld:
+        prodg_dir = compilers / "ProDG" / str(config.prodg_linker_version)
+        ngcld_wrapper = config.tools_dir / "gn2e70" / "ngcld.py"
+        ngcld_cmd = (
+            f"$python {ngcld_wrapper} --prodg {prodg_dir} --script $ldscript"
+            f" --rsp $out.rsp -o $out"
+        )
+        if wrapper_cmd:
+            ngcld_cmd += f' --wrapper "{wrapper_cmd.strip()}"'
+        ngcld_implicit = [
+            compilers_implicit or prodg_dir / "ngcld.exe",
+            ngcld_wrapper,
+            config.prodg_ldscript,
+            wrapper_implicit,
+        ]
+        n.comment("Link ELF file with ngcld (ProDG)")
+        n.rule(
+            name="link_ngcld",
+            command=ngcld_cmd,
+            description="LINK (ngcld) $out",
+            rspfile="$out.rsp",
+            rspfile_content="$in_newline",
+        )
+        n.newline()
+
     n.comment("Generate DOL")
     n.rule(
         name="elf2dol",
@@ -903,7 +936,16 @@ def generate_build_ninja(
 
         def write(self, n: ninja_syntax.Writer) -> None:
             n.comment(f"Link {self.name}")
-            if self.module_id == 0:
+            if self.module_id == 0 and use_ngcld:
+                n.build(
+                    outputs=build_path / f"{self.name}.elf",
+                    rule="link_ngcld",
+                    inputs=self.inputs,
+                    implicit=ngcld_implicit,
+                    variables={"ldscript": serialize_path(config.prodg_ldscript)},
+                    order_only="post-compile",
+                )
+            elif self.module_id == 0:
                 elf_path = build_path / f"{self.name}.elf"
                 elf_ldflags = f"$ldflags -lcf {serialize_path(self.ldscript)}"
                 if config.generate_map:
