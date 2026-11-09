@@ -6,6 +6,8 @@
 // Functions marked `// @target ADDRESS` can be checked on their own with
 //   python tools/gn2e70/prodg_probe.py src/game/tu_8005B908.cpp --versions 3.5 \n//     "--flags=-O2 -fexceptions -fvtable-thunks -G 0"
 
+#include <stdarg.h>
+
 // Named-value table (virtual interface). Only the slots used here are known:
 // with -fvtable-thunks, slot k of the vtable is at offset 8 + 4*k.
 class ValueTable {
@@ -68,7 +70,6 @@ struct DriverState {
 extern int lbl_80251C10;    // .data
 extern int lbl_80276A2C;    // limit for lbl_80276A30
 extern int lbl_80276A30;    // counter
-extern char lbl_80276F2C[];
 
 DriverState* fn_80065A74(int slot);
 void fn_8006AF58(void);
@@ -76,12 +77,20 @@ void fn_800643F4(int value);
 int fn_80071D70(void);
 float fn_8005E7F8(void);
 float fn_8005E890(void);
-// Linked-list node freed by fn_8005CFE0.
+// A 0x20-byte block of per-range settings (contents not known yet).
+struct RangeData {
+    char bytes[0x20];
+};
+
+// Linked list of settings ranges; freed by fn_8005CFE0, searched by fn_8005E6C4.
 struct ListNode {
-    char pad[0x28];
+    float min;       // 0x00
+    float max;       // 0x04
+    RangeData data;  // 0x08
     ListNode* next;  // 0x28
 };
 extern ListNode* lbl_80276F28;
+extern RangeData lbl_80276F2C;  // default settings when no range matches
 extern ValueTable* lbl_80276A20;  // current AI tuning table, may be null
 extern int lbl_80276A28;
 
@@ -170,8 +179,30 @@ float fn_80070B54(void);
 ProbeTarget* fn_800633F0(TrackProbe* probe, int id);
 
 float fn_80057784(int curve, float a, float b);
+int vsprintf(char* buf, const char* fmt, va_list args);
+void fn_80129AE0(int a, int b, char* text, int c);
+void fn_80064108(int arg, int track);
+void fn_8006416C(int arg, int track);
+void fn_80064538(int arg);
+void fn_8005DB78(void);
+void fn_800707FC(void);
+void fn_80069738(void);
+void fn_8005D034(void);
+void fn_8006A038(void);
+void fn_8006AFD4(void);
+int fn_80039624(void);
+int fn_80039724(float t);
 float fn_8005E29C(const char* name, float def);  // named tuning value with a default
 CarInfo* fn_800738D8(int slot);
+
+// Shared by fn_8005E29C and fn_8005E1D4 (fn_8005E29C is defined after fn_8005E1D4's
+// address, so the compiler can't have inlined it there; this is likely a header inline).
+static inline float getTuningFloat(const char* name, float def) {
+    if (lbl_80276A20 && lbl_80276A20->Has(name)) {
+        return lbl_80276A20->GetFloat(name);
+    }
+    return def;
+}
 
 // @target 8005BB20
 float fn_8005BB20(int x) { return (float)(x - 0x55) * 0.05f; }
@@ -287,7 +318,7 @@ void fn_8005E1A4(void) { fn_800643F4(lbl_80251C10); }
 float fn_8005E6B8(void) { return lbl_80276A00.f8; }
 
 // @target 8005E798
-char* fn_8005E798(void) { return lbl_80276F2C; }
+RangeData* fn_8005E798(void) { return &lbl_80276F2C; }
 
 // @target 8005E7A4
 float fn_8005E7A4(void) { return 76.25f; }
@@ -381,12 +412,7 @@ char* fn_8005DB2C(char* buf, int value) {
 
 // Named float tuning value, or def if there's no table or no such entry.
 // @target 8005E29C
-float fn_8005E29C(const char* name, float def) {
-    if (lbl_80276A20 && lbl_80276A20->Has(name)) {
-        return lbl_80276A20->GetFloat(name);
-    }
-    return def;
-}
+float fn_8005E29C(const char* name, float def) { return getTuningFloat(name, def); }
 
 // Named int tuning value, or def.
 // @target 8005E31C
@@ -548,6 +574,85 @@ void fn_8005BE50(void) {
         }
     }
     fn_800621F4(&probe, 2);
+}
+
+// Formats a message and passes it on (printf-style).
+// @target 8005D7D8
+void fn_8005D7D8(int a, int b, int c, const char* fmt, ...) {
+    char buf[256];
+    va_list args;
+    va_start(args, fmt);
+    vsprintf(buf, fmt, args);
+    fn_80129AE0(a, b, buf, c);
+}
+
+// Per-frame AI update.
+// @target 8005E0D0
+void fn_8005E0D0(void) {
+    for (int i = 0; i < lbl_80251BF4; i++) {
+        AIObject* obj = lbl_80276E38[i];
+        if (obj) {
+            if (obj->ready) {
+                fn_80064108(lbl_80251C10, obj->track);
+            } else {
+                fn_8006416C(lbl_80251C10, obj->track);
+            }
+            obj->ready = 0;
+        }
+    }
+    fn_80064538(lbl_80251C10);
+    fn_8005DB78();
+    fn_800707FC();
+    fn_80069738();
+    if ((++lbl_80276A38 & 7) == 0) {
+        fn_8005D034();  // every 8th frame
+    }
+    fn_8006A038();
+    fn_8006AFD4();
+}
+
+// Pit-side tuning value for a skill level; level 2 uses "pit_side_2" when present.
+// @target 8005E1D4
+float fn_8005E1D4(int level) {
+    if (level == 0) {
+        level = 1;
+    }
+    const char* hard = "pit_side_2";
+    const char* name = "pit_side";
+    if (level == 2 && lbl_80276A20 && lbl_80276A20->Has(hard)) {
+        name = hard;
+    }
+    // Same lookup as getTuningFloat, but written out: the original loads the default
+    // only on the fallback path instead of keeping it in a register.
+    if (lbl_80276A20 && lbl_80276A20->Has(name)) {
+        return lbl_80276A20->GetFloat(name);
+    }
+    return 1.0f;
+}
+
+// Settings for the range containing t, or the defaults.
+// @target 8005E6C4
+RangeData* fn_8005E6C4(float t) {
+    int found = 0;
+    bool busy = fn_80039624();
+    if (!busy) {
+        bool ok = fn_80039724(t);
+        if (ok) {
+            found = 1;
+        }
+    }
+    if (found) {
+        for (ListNode* node = lbl_80276F28; node; node = node->next) {
+            bool inRange = false;
+            if (!(t < node->min)) {
+                inRange = t <= node->max;  // computed as a value, like the original
+            }
+            if (inRange) {
+                return &node->data;
+            }
+        }
+    }
+    return &lbl_80276F2C;
 }
 
 }  // extern "C"
