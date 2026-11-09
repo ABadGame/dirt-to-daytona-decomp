@@ -16,8 +16,8 @@ port is a later, separate step: it needs replacements for the GameCube hardware 
 - **10,614 functions** were found automatically. **888 are named**: the Dolphin SDK
   (about 75%, 62% and 86% of the bytes in its three blocks) and the ProDG/GCC runtime,
   along with ~300 SDK data objects.
-- **First decompiled function:** `fn_8005BB20` in
-  [src/game/tu_8005B908.cpp](src/game/tu_8005B908.cpp) matches 100% in objdiff.
+- **Decompiled:** 31 of 70 functions in
+  [src/game/tu_8005B908.cpp](src/game/tu_8005B908.cpp) (the AI driver's settings code) match 100% in objdiff, on every ProDG version.
 - `.text` is split into **333 source files**: 81 Dolphin SDK files (`dolphin/os/OS.c`,
   `dolphin/gx/GXTexture.c`, …) and 252 game units (`game/dash.cpp`, `game/race.cpp`,
   `game/tu_XXXXXXXX.cpp`, …). Everything else, including all data sections, the ProDG
