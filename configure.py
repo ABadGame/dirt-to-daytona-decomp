@@ -283,6 +283,7 @@ cflags_game = [
     "-O2",
     "-fexceptions",
     "-fvtable-thunks",  # virtual calls load one 4-byte pointer (ProDG's default is 8-byte entries)
+    "-G 0",  # no small data: game globals are reached with lis/addi, never r13
     "-Iinclude",
     "-Isrc",
     f"-DBUILD_VERSION={version_num}",
