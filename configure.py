@@ -282,6 +282,7 @@ def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
 cflags_game = [
     "-O2",
     "-fexceptions",
+    "-fvtable-thunks",  # virtual calls load one 4-byte pointer (ProDG's default is 8-byte entries)
     "-Iinclude",
     "-Isrc",
     f"-DBUILD_VERSION={version_num}",

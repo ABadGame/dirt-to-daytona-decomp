@@ -1,9 +1,26 @@
 // Translation unit 0x8005B908-0x8005EA70 (ends at a GCC static-initializer stub).
 // Its strings include AI skill-table warnings ("AI: Warning: ..."), so this is
-// probably part of the AI driver code. Built with ProDG: ngccc -O2 -fexceptions.
+// probably part of the AI driver code. Built with ProDG:
+//   ngccc -O2 -fexceptions -fvtable-thunks
 //
 // Functions marked `// @target ADDRESS` can be checked on their own with
-//   python tools/gn2e70/prodg_probe.py src/game/tu_8005B908.cpp --versions 3.5
+//   python tools/gn2e70/prodg_probe.py src/game/tu_8005B908.cpp --versions 3.5 \n//     "--flags=-O2 -fexceptions -fvtable-thunks"
+
+// Named-value table (virtual interface). Only the slots used here are known:
+// with -fvtable-thunks, slot k of the vtable is at offset 8 + 4*k.
+class ValueTable {
+public:
+    virtual ~ValueTable();                   // 0x08
+    virtual int Has(const char* name);       // 0x0C
+    virtual void v2();                       // 0x10
+    virtual void v3();                       // 0x14
+    virtual void v4();                       // 0x18
+    virtual void v5();                       // 0x1C
+    virtual void v6();                       // 0x20
+    virtual float GetFloat(const char* name);  // 0x24
+    virtual void v8();                       // 0x28
+    virtual int GetInt(const char* name);    // 0x2C
+};
 
 extern "C" {
 
@@ -61,6 +78,28 @@ void fn_800643F4(int value);
 int fn_80071D70(void);
 float fn_8005E7F8(void);
 float fn_8005E890(void);
+// Linked-list node freed by fn_8005CFE0.
+struct ListNode {
+    char pad[0x28];
+    ListNode* next;  // 0x28
+};
+extern ListNode* lbl_80276F28[];
+extern ValueTable* lbl_80276A20[];  // current AI tuning table, may be null
+extern int lbl_80276A28[];
+
+struct AIObject {
+    char pad[0x5C];
+    int ready;  // 0x5C
+};
+
+void fn_801A1F68(const char* fmt, ...);  // debug warning print (kernel.cpp)
+void fn_801A3830(void* ptr);             // memory free (Mem*)
+int sprintf(char* buf, const char* fmt, ...);
+int fn_8002371C(void* buf, int flags, int* outA, float* outTime);
+void fn_80061FC0(AIObject* obj, int arg);
+void fn_8005BA48(AIObject* obj, int arg);
+void fn_8005E5B0(int id, char* out);
+int fn_8005E578(unsigned int slot);
 float fn_80057784(int curve, float a, float b);
 float fn_8005E29C(const char* name, float def);  // named tuning value with a default
 CarInfo* fn_800738D8(int slot);
@@ -217,5 +256,89 @@ void fn_8005E970(void) {
 
 // @target 8005E98C
 bool fn_8005E98C(void) { return !fn_80065A74(-1)->active; }
+
+// @target 8005BAD8
+AIObject* fn_8005BAD8(AIObject* obj, int arg) {
+    fn_80061FC0(obj, arg);
+    obj->ready = 1;
+    fn_8005BA48(obj, arg);
+    return obj;
+}
+
+// Warns when an AI table lacks an element.
+// @target 8005BB60
+void fn_8005BB60(ValueTable* table, const char* element, const char* tableName) {
+    if (!table->Has(element)) {
+        fn_801A1F68("AI: Warning: table \"%s\" has no element \"%s\"", tableName, element);
+    }
+}
+
+// Reads the ghost car's time, or 60 seconds if there's no ghost.
+// @target 8005BF0C
+float fn_8005BF0C(void) {
+    char buf[16];
+    int unk;
+    float time;
+    float result;
+    if (!fn_8002371C(buf, 0, &unk, &time)) {
+        fn_801A1F68("AI: Warning: No ghost data.");
+        result = 60.0f;
+    } else {
+        result = time;
+    }
+    return result;
+}
+
+// Frees every node of the list at lbl_80276F28.
+// @target 8005CFE0
+void fn_8005CFE0(void) {
+    while (lbl_80276F28[0]) {
+        ListNode* node = lbl_80276F28[0];
+        lbl_80276F28[0] = node->next;
+        fn_801A3830(node);
+    }
+}
+
+// Formats a signed difference ("+3", "-1"), or an empty string for 0.
+// @target 8005DB2C
+char* fn_8005DB2C(char* buf, int value) {
+    if (value) {
+        sprintf(buf, "%+d", value);
+    } else {
+        buf[0] = 0;
+    }
+    return buf;
+}
+
+// Named float tuning value, or def if there's no table or no such entry.
+// @target 8005E29C
+float fn_8005E29C(const char* name, float def) {
+    if (lbl_80276A20[0] && lbl_80276A20[0]->Has(name)) {
+        return lbl_80276A20[0]->GetFloat(name);
+    }
+    return def;
+}
+
+// Named int tuning value, or def.
+// @target 8005E31C
+int fn_8005E31C(const char* name, int def) {
+    if (lbl_80276A20[0] && lbl_80276A20[0]->Has(name)) {
+        return lbl_80276A20[0]->GetInt(name);
+    }
+    return def;
+}
+
+// @target 8005E668
+char* fn_8005E668(int slot, char* out) {
+    if (slot >= 0) {
+        fn_8005E5B0(fn_8005E578(slot), out);
+    } else {
+        fn_8005E5B0(-40, out);
+    }
+    return out;
+}
+
+// @target 8005E7B0
+int fn_8005E7B0(void) { return fn_80071D70() && lbl_80276A28[0] == 0; }
 
 }  // extern "C"
