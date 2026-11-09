@@ -94,9 +94,22 @@ setjmp/longjmp ("sjlj") C++ exception handling. Functions with `try` blocks also
 `r31` frame pointer (`mr r31,r1`) and save every non-volatile register (`mfcr`,
 `stmw r14`). The memory layout is ProDG's too: `r13` covers all the small-data sections,
 `.ctors`/`.dtors` are `-1`-headed GCC lists, and `libsn` runtime messages point to the
-"ProDG manual". Game code will need the ProDG compilers in `build/compilers/ProDG/`
-(3.5, 3.5b140, 3.7, 3.8.1, 3.9.3) to match; the exact version is still to be found. The
-Dolphin SDK portions are Metrowerks code (see the code map).
+"ProDG manual". The Dolphin SDK portions are Metrowerks code (see the code map).
+
+**Game compiler settings** (from probes, see below): `ngccc -O2 -fexceptions`
+- **Optimization:** `-O2` and `-O3` match; `-O1` and `-Os` don't.
+- **Exceptions:** `-fexceptions` is required, because ProDG turns exception handling off
+  by default and the game uses `try`/`catch`.
+- **Data placement:** the defaults match the game. Small globals go through `r13`
+  (`sda21`), and float constants are loaded from `.rodata` with `lis`/`lfs`.
+
+**Version:** not distinguishable yet. ProDG 3.5, 3.5b140, 3.7, 3.8.1 and 3.9.3 all
+produce identical machine code for every probe so far: the three matched game functions
+plus 16 test constructs (switch tables, loops, struct copies, constant division, 64-bit
+math, virtual calls, constructors/destructors, `new`/`delete`, `try`/`catch`). The only
+difference found is that 3.5–3.7 emit empty placeholder sections, which never reach the
+DOL. The project tentatively uses **3.5**. Every probe runs against all five versions,
+so the first game function that matches only some of them will settle it.
 
 ## Project-specific workarounds
 
@@ -158,6 +171,11 @@ All of these live in `tools/gn2e70/` and run from the project root after a build
   relocations to name callees and data. On the first run it matched 1,306 functions and
   contradicted none of the 105 names we already had. It never applies names the
   Metrowerks linker reserves (`_ctors`, `_dtors`, `__ArenaLo`…).
+- `prodg_probe.py PROBE.c [--flags=-O2 ...] [--show]`: compiles a probe file with every
+  ProDG version and flag set, and compares each function marked `// @target ADDRESS`
+  against the game (addresses masked). `--show` prints the instruction diff.
+  [probes/conv.c](tools/gn2e70/probes/conv.c) reproduces three game functions exactly
+  (`0x8005BB20`, `0x800A0694`, `0x80020650`).
 - `manual_names.txt` + `apply_names.py`: hand-identified names, each with its evidence.
   The file also records corrections, for example `0x800471E8` is `__fini_cpp`, which dtk's
   own signature had mislabeled as `__init_cpp`.
@@ -177,8 +195,11 @@ All of these live in `tools/gn2e70/` and run from the project root after a build
    where this June 2002 SDK differs from both the 2001 and 2004 decomps. The largest gap
    is 30 GX functions at `0x801B75B8`–`0x801B8884`. Those need fuzzy matching or
    identification by hand.
-3. **Pin down the ProDG version:** compile small test functions with each ProDG version
-   and compare them with the original.
+3. **Pin down the ProDG version:** *flags found, version open.* `-O2 -fexceptions`
+   reproduces game code. The five ProDG versions can't be told apart yet, so 3.5 is a
+   tentative choice. Keep adding `prodg_probe.py` probes as game functions get
+   decompiled. The next step that depends on this is building game code with ProDG
+   inside `configure.py`.
 4. **ProDG link step:** switch from `mwldeppc` to `ngcld` and remove workaround 5.
 5. **Split the game code:** use the leftover assert/debug strings (`dash.cpp`, `race.cpp`…)
    and the `.ctors` entries (one per C++ file with static initializers) to find source-file
