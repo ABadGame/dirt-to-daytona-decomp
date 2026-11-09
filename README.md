@@ -15,7 +15,9 @@ port is a later, separate step: it needs replacements for the GameCube hardware 
   No relocations are blocked, so every address reference is a real symbol reference.
 - **10,614 functions** were found automatically. **888 are named**: the Dolphin SDK
   (about 75%, 62% and 86% of the bytes in its three blocks) and the ProDG/GCC runtime,
-  along with ~300 SDK data objects. None are decompiled yet.
+  along with ~300 SDK data objects.
+- **First decompiled function:** `fn_8005BB20` in
+  [src/game/tu_8005B908.cpp](src/game/tu_8005B908.cpp) matches 100% in objdiff.
 - `.text` is split into **333 source files**: 81 Dolphin SDK files (`dolphin/os/OS.c`,
   `dolphin/gx/GXTexture.c`, …) and 252 game units (`game/dash.cpp`, `game/race.cpp`,
   `game/tu_XXXXXXXX.cpp`, …). Everything else, including all data sections, the ProDG
@@ -231,8 +233,19 @@ All of these live in `tools/gn2e70/` and run from the project root after a build
      constructors and is unsplit.
    - **Next:** assign `.data`/`.rodata`/`.bss` to these units, split the units that hold
      several files, and give the units real names as classes get identified.
-6. **Decompile:** add source to `src/` and register each object in `configure.py`,
-   starting as `NonMatching` and switching to `Matching` once it matches.
+6. **Decompile:** *started.* Game units already compile with ProDG.
+   - **Workflow:** create `src/<unit>.cpp` for a unit listed in `splits.txt` (for
+     example `src/game/tu_8005B908.cpp`), run `ninja`, and compare in objdiff. Mark the
+     object `Matching` in `configure.py` once the whole unit matches; until then the
+     original object stays linked, so the DOL still matches.
+   - **Compiling:** `GameLib` objects set `prodg_version`, so `tools/project.py`
+     compiles them with a `prodg_cc` rule (`ngccc -O2 -fexceptions`) through
+     [tools/gn2e70/ngccc.py](tools/gn2e70/ngccc.py). The wrapper sets `SN_NGC_PATH` and
+     fixes ngccc's dependency file (it names the target `<stem>.obj`), so header changes
+     trigger rebuilds.
+   - **Names:** use `extern "C"` for functions that don't have real names yet, so the
+     symbol matches the original's `fn_XXXXXXXX`. C++ would mangle it otherwise
+     (`fn_8005BB20__Fi`).
 7. **PC port (later):** build a non-matching configuration with SDK calls redirected to
    a PC backend (for example SDL with OpenGL/Vulkan).
 

@@ -63,6 +63,9 @@ class Object:
             "extra_clang_flags": [],
             "lib": None,
             "mw_version": None,
+            # GN2E70: compile with SN Systems ProDG (ngccc) instead of mwcc when set to a
+            # folder name under build/compilers/ProDG. cflags are then GCC flags.
+            "prodg_version": None,
             "progress_category": None,
             "scratch_preset_id": None,
             "shift_jis": None,
@@ -783,6 +786,23 @@ def generate_build_ninja(
     )
     n.newline()
 
+    # GN2E70: ProDG (SN Systems GCC) build, for objects with a `prodg_version` option
+    ngccc_wrapper = config.tools_dir / "gn2e70" / "ngccc.py"
+    prodg_cc_cmd = (
+        f"$python {ngccc_wrapper} --prodg $prodg_dir"
+        + (f' --wrapper "{wrapper_cmd.strip()}"' if wrapper_cmd else "")
+        + " -o $out -d $basefile.d $in -- $cflags"
+    )
+    n.comment("ProDG (ngccc) build")
+    n.rule(
+        name="prodg_cc",
+        command=prodg_cc_cmd,
+        description="NGCCC $out",
+        depfile="$basefile.d",
+        deps="gcc",
+    )
+    n.newline()
+
     n.comment("MWCC build (with UTF-8 to Shift JIS wrapper)")
     n.rule(
         name="mwcc_sjis",
@@ -1049,6 +1069,31 @@ def generate_build_ninja(
 
             cflags = obj.options["cflags"]
             extra_cflags = obj.options["extra_cflags"]
+
+            # GN2E70: ProDG objects use GCC flags and their own rule
+            if obj.options["prodg_version"] is not None:
+                prodg_dir = compilers / "ProDG" / str(obj.options["prodg_version"])
+                n.comment(f"{obj.name}: {obj.options['lib']} (linked {obj.completed}, ProDG)")
+                n.build(
+                    outputs=obj.src_obj_path,
+                    rule="prodg_cc",
+                    inputs=src_path,
+                    variables={
+                        "prodg_dir": prodg_dir,
+                        "cflags": make_flags_str(cflags + extra_cflags),
+                        "basefile": obj.src_obj_path.with_suffix(""),
+                    },
+                    implicit=[
+                        compilers_implicit or prodg_dir / "ngccc.exe",
+                        ngccc_wrapper,
+                        wrapper_implicit,
+                    ],
+                    order_only="pre-compile",
+                )
+                n.newline()
+                if obj.options["add_to_all"]:
+                    source_inputs.append(obj.src_obj_path)
+                return obj.src_obj_path
 
             # Add appropriate language flag if it doesn't exist already
             # Added directly to the source so it flows to other generation tasks

@@ -277,14 +277,23 @@ def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
-# GN2E70 game code: SN Systems ProDG (GCC 2.95), built with `ngccc -O2 -fexceptions`.
-# project.py only compiles with Metrowerks so far, so these stay NonMatching until a
-# ProDG compile rule exists (see README roadmap). mw_version/cflags are placeholders.
+# GN2E70 game code: SN Systems ProDG (GCC 2.95). Flags from tools/gn2e70/prodg_probe.py;
+# the ProDG version is tentative (all five produce identical code so far, see README).
+cflags_game = [
+    "-O2",
+    "-fexceptions",
+    "-Iinclude",
+    "-Isrc",
+    f"-DBUILD_VERSION={version_num}",
+    f"-DVERSION_{config.version}",
+]
+
+
 def GameLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
-        "mw_version": config.linker_version,
-        "cflags": cflags_base,
+        "prodg_version": "3.5",
+        "cflags": cflags_game,
         "progress_category": "game",
         "objects": objects,
     }
