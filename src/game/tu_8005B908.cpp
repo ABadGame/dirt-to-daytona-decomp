@@ -14,7 +14,7 @@ class ValueTable {
 public:
     virtual ~ValueTable();                   // 0x08
     virtual int Has(const char* name);       // 0x0C
-    virtual void v2();                       // 0x10
+    virtual int HasEntry(const char* name);  // 0x10
     virtual void v3();                       // 0x14
     virtual void v4();                       // 0x18
     virtual void v5();                       // 0x1C
@@ -146,9 +146,8 @@ void fn_80069634(void);
 void fn_80064C70(void);
 void fn_80069F40(void);
 void fn_8007078C(void);
-void fn_8005B884(int arg);
 extern int lbl_80276A24;
-extern int lbl_80276A34;
+extern int lbl_80276A34;  // a ValueTable* stored as int
 void fn_8005BA48(AIObject* obj, int arg);
 char* fn_8005E5B0(int id, char* out);
 int fn_8005E578(unsigned int slot);
@@ -178,6 +177,24 @@ void fn_800621F4(TrackProbe* probe, int flags);
 float fn_80070B54(void);
 ProbeTarget* fn_800633F0(TrackProbe* probe, int id);
 
+// A float range (filled in by fn_8005B970).
+struct FloatRange {
+    float min;  // 0x0
+    float max;  // 0x4
+};
+struct FloatArray;  // opaque; element access via fn_801E9BB8
+struct TrackInfo {
+    char pad[0x60];
+    const char* name;  // 0x60
+};
+float* fn_801E9BB8(FloatArray* arr, int index);
+ValueTable* fn_8005B3DC(const char* file);  // loads a .val table
+void fn_8005B884(ValueTable* table);        // releases it
+int fn_80017100(void);                      // number of tracks
+TrackInfo* fn_8001710C(int index);
+void fn_801A2028(const char* fmt, ...);     // fatal error ("PANIC")
+const char* fn_8005BBBC(int level);
+
 float fn_80057784(int curve, float a, float b);
 int vsprintf(char* buf, const char* fmt, va_list args);
 void fn_80129AE0(int a, int b, char* text, int c);
@@ -202,6 +219,15 @@ static inline float getTuningFloat(const char* name, float def) {
         return lbl_80276A20->GetFloat(name);
     }
     return def;
+}
+
+// Number of values used from an array: at most 128.
+static inline int fn_rangeCount(FloatArray* arr) {
+    int n = *(int*)arr;
+    if (n > 128) {
+        n = 128;
+    }
+    return n;
 }
 
 // @target 8005BB20
@@ -539,7 +565,7 @@ void fn_8005D420(void) {
     fn_80064C70();
     fn_80069F40();
     fn_8007078C();
-    fn_8005B884(lbl_80276A34);
+    fn_8005B884((ValueTable*)lbl_80276A34);
 }
 
 // Interpolates a tuning value between two skill tables (t = 0..1).
@@ -653,6 +679,45 @@ RangeData* fn_8005E6C4(float t) {
         }
     }
     return &lbl_80276F2C;
+}
+
+// Smallest and largest of an array's first (up to 128) values; 0 for an empty array.
+// NOT MATCHING yet: right size and shape; floating-point register choices differ in the
+// min/max updates (the original updates v in place for the max).
+// @target 8005B970
+void fn_8005B970(FloatRange* out, FloatArray* arr) {
+    if (fn_rangeCount(arr) != 0) {
+        float first = *fn_801E9BB8(arr, 0);
+        out->min = out->max = first;
+        for (int i = 0; i < fn_rangeCount(arr); i++) {
+            float v = *fn_801E9BB8(arr, i);
+            out->min = v <= out->min ? v : out->min;
+            if (!(v >= out->max)) {
+                v = out->max;
+            }
+            out->max = v;
+        }
+    } else {
+        out->min = out->max = 0.0f;
+    }
+}
+
+// Checks that cskill.val has a "<skill>_<track>" entry for every track and skill level.
+// @target 8005BBF4
+void fn_8005BBF4(void) {
+    ValueTable* table = fn_8005B3DC("cskill.val");
+    int numTracks = fn_80017100();
+    for (int i = 0; i < numTracks; i++) {
+        const char* track = fn_8001710C(i)->name;
+        for (int level = 0; level <= 2; level++) {
+            char entry[64];
+            sprintf(entry, "%s_%s", fn_8005BBBC(level), track);
+            if (!table->HasEntry(entry)) {
+                fn_801A2028("ai: cskill.val does not contain entry %s", entry);
+            }
+        }
+    }
+    fn_8005B884(table);
 }
 
 }  // extern "C"
