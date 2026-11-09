@@ -16,8 +16,11 @@ port is a later, separate step: it needs replacements for the GameCube hardware 
 - **10,614 functions** were found automatically. **888 are named**: the Dolphin SDK
   (about 75%, 62% and 86% of the bytes in its three blocks) and the ProDG/GCC runtime,
   along with ~300 SDK data objects. None are decompiled yet.
-- All code is still in one automatic unit per section (`auto_*`). Splitting into real
-  source files (`dash.cpp`, `race.cpp`, …) is still to come.
+- `.text` is split into **333 source files**: 81 Dolphin SDK files (`dolphin/os/OS.c`,
+  `dolphin/gx/GXTexture.c`, …) and 252 game units (`game/dash.cpp`, `game/race.cpp`,
+  `game/tu_XXXXXXXX.cpp`, …). Everything else, including all data sections, the ProDG
+  runtime and the last game region, is still in dtk's automatic units. objdiff tracks
+  progress per file.
 
 ## Code map
 
@@ -213,9 +216,21 @@ All of these live in `tools/gn2e70/` and run from the project root after a build
    relocations.~~ Done. A possible follow-up is splitting `.ctdt` back into real
    `.ctors`/`.dtors`, though that's limited by how dtk assigns constructor entries to
    source files, not by the linker.
-5. **Split the game code:** use the leftover assert/debug strings (`dash.cpp`, `race.cpp`…)
-   and the `.ctors` entries (one per C++ file with static initializers) to find source-file
-   boundaries and name classes (`RaceSummaryOverlay`, …).
+5. **Split into source files:** *`.text` done; data still to do.*
+   - **SDK:** [sdk_splits.py](tools/gn2e70/sdk_splits.py) maps each named SDK
+     function to the reference source file that defines it, giving 81 files. Unnamed
+     functions *between* two files are left in automatic units rather than guessed.
+   - **Game:** [game_splits.py](tools/gn2e70/game_splits.py) uses the constructor
+     table. All 252 `.ctors` entries point at GCC 2.95's `_GLOBAL_.I.<file>` stub (a
+     44-byte call to `__static_initialization_and_destruction_0(1, 0xFFFF)`), which sits
+     at the end of its source file. That gives 252 units ending at exact boundaries.
+     Eight are named from their own debug messages (`dash`, `race`, `pit`, `event`,
+     `soundmgr`, `Skid`, `kernel`, `file`); the rest are `game/tu_<start>.cpp`.
+   - **Caveats:** files without static initializers have no stub, so a unit can hold
+     several real source files. The last game region (`0x801E54E8`–`0x80212AB0`) has no
+     constructors and is unsplit.
+   - **Next:** assign `.data`/`.rodata`/`.bss` to these units, split the units that hold
+     several files, and give the units real names as classes get identified.
 6. **Decompile:** add source to `src/` and register each object in `configure.py`,
    starting as `NonMatching` and switching to `Matching` once it matches.
 7. **PC port (later):** build a non-matching configuration with SDK calls redirected to

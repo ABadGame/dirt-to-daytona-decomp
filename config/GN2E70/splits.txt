@@ -8,3 +8,1002 @@ Sections:
 	.sdata      type:data align:8
 	.sbss       type:bss align:4
 	.sdata2     type:rodata align:8
+
+game/tu_800032C0.cpp: comment:0
+	.text       start:0x800032C0 end:0x800058A0
+
+game/dash.cpp: comment:0
+	.text       start:0x800058A0 end:0x800150BC
+
+game/race.cpp: comment:0
+	.text       start:0x800150BC end:0x80017848
+
+game/tu_80017848.cpp: comment:0
+	.text       start:0x80017848 end:0x8001BB74
+
+game/tu_8001BB74.cpp: comment:0
+	.text       start:0x8001BB74 end:0x8001FB14
+
+game/tu_8001FB14.cpp: comment:0
+	.text       start:0x8001FB14 end:0x80020794
+
+game/tu_80020794.cpp: comment:0
+	.text       start:0x80020794 end:0x80020CB4
+
+game/tu_80020CB4.cpp: comment:0
+	.text       start:0x80020CB4 end:0x80020D4C
+
+game/tu_80020D4C.cpp: comment:0
+	.text       start:0x80020D4C end:0x80021748
+
+game/tu_80021748.cpp: comment:0
+	.text       start:0x80021748 end:0x80023FB4
+
+game/tu_80023FB4.cpp: comment:0
+	.text       start:0x80023FB4 end:0x80024154
+
+game/tu_80024154.cpp: comment:0
+	.text       start:0x80024154 end:0x800241D4
+
+game/tu_800241D4.cpp: comment:0
+	.text       start:0x800241D4 end:0x800243BC
+
+game/tu_800243BC.cpp: comment:0
+	.text       start:0x800243BC end:0x80026860
+
+game/tu_80026860.cpp: comment:0
+	.text       start:0x80026860 end:0x8002710C
+
+game/tu_8002710C.cpp: comment:0
+	.text       start:0x8002710C end:0x8002E0EC
+
+game/tu_8002E0EC.cpp: comment:0
+	.text       start:0x8002E0EC end:0x8002F5F4
+
+game/tu_8002F5F4.cpp: comment:0
+	.text       start:0x8002F5F4 end:0x8002F788
+
+dolphin/base/PPCArch.c:
+	.text       start:0x8003D628 end:0x8003D838
+
+dolphin/os/OS.c:
+	.text       start:0x8003D844 end:0x8003E238
+
+dolphin/os/OSAlarm.c:
+	.text       start:0x8003E388 end:0x8003E938
+
+dolphin/os/OSAlloc.c:
+	.text       start:0x8003EBB8 end:0x8003F7AC
+
+dolphin/os/OSArena.c:
+	.text       start:0x8003F7AC end:0x8003F818
+
+dolphin/os/OSAudioSystem.c:
+	.text       start:0x8003F818 end:0x8003FAAC
+
+dolphin/os/OSCache.c:
+	.text       start:0x8003FABC end:0x800405AC
+
+dolphin/os/OSContext.c:
+	.text       start:0x800405AC end:0x80040F90
+
+dolphin/os/OSError.c:
+	.text       start:0x80040F90 end:0x80041358
+
+dolphin/os/OSInterrupt.c:
+	.text       start:0x80041358 end:0x80041C60
+
+dolphin/os/OSLink.c:
+	.text       start:0x80041C74 end:0x80042490
+
+dolphin/os/OSMemory.c:
+	.text       start:0x800424E4 end:0x8004284C
+
+dolphin/os/OSReset.c:
+	.text       start:0x8004284C end:0x80042D5C
+
+dolphin/os/OSResetSW.c:
+	.text       start:0x80042D5C end:0x80042EC4
+
+dolphin/os/OSRtc.c:
+	.text       start:0x800431D8 end:0x800449C4
+
+dolphin/os/OSSync.c:
+	.text       start:0x800449E4 end:0x80044A48
+
+dolphin/os/OSThread.c:
+	.text       start:0x80044A48 end:0x800467F8
+
+dolphin/os/OSTime.c:
+	.text       start:0x800467F8 end:0x80047174
+
+dolphin/os/__ppc_eabi_init.c:
+	.text       start:0x80047194 end:0x800472D0
+
+dolphin/os/OSMutex.c:
+	.text       start:0x800472D0 end:0x800478C4
+
+dolphin/os/OSReboot.c:
+	.text       start:0x800479B0 end:0x80047B70
+
+dolphin/dvd/dvdfs.c:
+	.text       start:0x80047BA4 end:0x80048D94
+
+dolphin/dvd/dvd.c:
+	.text       start:0x80048D94 end:0x8004C548
+
+dolphin/dvd/dvdqueue.c:
+	.text       start:0x8004C548 end:0x8004C97C
+
+dolphin/dvd/dvderror.c:
+	.text       start:0x8004C97C end:0x8004CC74
+
+dolphin/dvd/fstload.c:
+	.text       start:0x8004CC74 end:0x8004CEB4
+
+dolphin/dvd/dvdlow.c:
+	.text       start:0x8004CEB4 end:0x8004E164
+
+dolphin/exi/EXIBios.c:
+	.text       start:0x8004EAEC end:0x8004F940
+
+dolphin/exi/EXIUart.c:
+	.text       start:0x8004FF58 end:0x800502A0
+
+dolphin/db/db.c:
+	.text       start:0x800505B0 end:0x80050708
+
+dolphin/pad/Pad.c:
+	.text       start:0x80050708 end:0x800525E0
+
+dolphin/si/SIBios.c:
+	.text       start:0x80052600 end:0x800540D0
+
+dolphin/si/SISamplingRate.c:
+	.text       start:0x80054228 end:0x80054330
+
+dolphin/vi/vi.c:
+	.text       start:0x80054338 end:0x80056D78
+
+game/tu_80056D78.cpp: comment:0
+	.text       start:0x80056D78 end:0x80057534
+
+game/tu_80057534.cpp: comment:0
+	.text       start:0x80057534 end:0x80057604
+
+game/tu_80057604.cpp: comment:0
+	.text       start:0x80057604 end:0x80057C88
+
+game/tu_80057C88.cpp: comment:0
+	.text       start:0x80057C88 end:0x8005A8D0
+
+game/tu_8005A8D0.cpp: comment:0
+	.text       start:0x8005A8D0 end:0x8005B3BC
+
+game/tu_8005B3BC.cpp: comment:0
+	.text       start:0x8005B3BC end:0x8005B908
+
+game/tu_8005B908.cpp: comment:0
+	.text       start:0x8005B908 end:0x8005EA70
+
+game/tu_8005EA70.cpp: comment:0
+	.text       start:0x8005EA70 end:0x80063D38
+
+game/tu_80063D38.cpp: comment:0
+	.text       start:0x80063D38 end:0x80064D60
+
+game/tu_80064D60.cpp: comment:0
+	.text       start:0x80064D60 end:0x80066B4C
+
+game/tu_80066B4C.cpp: comment:0
+	.text       start:0x80066B4C end:0x80066D2C
+
+game/pit.cpp: comment:0
+	.text       start:0x80066D2C end:0x80069BC0
+
+game/tu_80069BC0.cpp: comment:0
+	.text       start:0x80069BC0 end:0x8006A844
+
+game/tu_8006A844.cpp: comment:0
+	.text       start:0x8006A844 end:0x8006B18C
+
+game/tu_8006B18C.cpp: comment:0
+	.text       start:0x8006B18C end:0x8006B734
+
+game/tu_8006B734.cpp: comment:0
+	.text       start:0x8006B734 end:0x80070C70
+
+game/tu_80070C70.cpp: comment:0
+	.text       start:0x80070C70 end:0x8007132C
+
+game/tu_8007132C.cpp: comment:0
+	.text       start:0x8007132C end:0x80071444
+
+game/tu_80071444.cpp: comment:0
+	.text       start:0x80071444 end:0x80071758
+
+game/tu_80071758.cpp: comment:0
+	.text       start:0x80071758 end:0x80072E88
+
+game/tu_80072E88.cpp: comment:0
+	.text       start:0x80072E88 end:0x80075AF0
+
+game/tu_80075AF0.cpp: comment:0
+	.text       start:0x80075AF0 end:0x8007764C
+
+game/tu_8007764C.cpp: comment:0
+	.text       start:0x8007764C end:0x80077FF8
+
+game/tu_80077FF8.cpp: comment:0
+	.text       start:0x80077FF8 end:0x8007AC30
+
+game/tu_8007AC30.cpp: comment:0
+	.text       start:0x8007AC30 end:0x8008A360
+
+game/tu_8008A360.cpp: comment:0
+	.text       start:0x8008A360 end:0x8008E310
+
+game/tu_8008E310.cpp: comment:0
+	.text       start:0x8008E310 end:0x80098E40
+
+game/tu_80098E40.cpp: comment:0
+	.text       start:0x80098E40 end:0x8009F928
+
+game/tu_8009F928.cpp: comment:0
+	.text       start:0x8009F928 end:0x800A0674
+
+game/tu_800A0674.cpp: comment:0
+	.text       start:0x800A0674 end:0x800A3550
+
+game/tu_800A3550.cpp: comment:0
+	.text       start:0x800A3550 end:0x800A3BD4
+
+game/tu_800A3BD4.cpp: comment:0
+	.text       start:0x800A3BD4 end:0x800A6FBC
+
+game/tu_800A6FBC.cpp: comment:0
+	.text       start:0x800A6FBC end:0x800AA068
+
+game/tu_800AA068.cpp: comment:0
+	.text       start:0x800AA068 end:0x800AB314
+
+game/tu_800AB314.cpp: comment:0
+	.text       start:0x800AB314 end:0x800AD5BC
+
+game/tu_800AD5BC.cpp: comment:0
+	.text       start:0x800AD5BC end:0x800AE158
+
+game/tu_800AE158.cpp: comment:0
+	.text       start:0x800AE158 end:0x800B48E4
+
+game/tu_800B48E4.cpp: comment:0
+	.text       start:0x800B48E4 end:0x800B5144
+
+game/tu_800B5144.cpp: comment:0
+	.text       start:0x800B5144 end:0x800B58CC
+
+game/tu_800B58CC.cpp: comment:0
+	.text       start:0x800B58CC end:0x800BCB38
+
+game/tu_800BCB38.cpp: comment:0
+	.text       start:0x800BCB38 end:0x800BD9A4
+
+game/tu_800BD9A4.cpp: comment:0
+	.text       start:0x800BD9A4 end:0x800C20D8
+
+game/tu_800C20D8.cpp: comment:0
+	.text       start:0x800C20D8 end:0x800C42FC
+
+game/tu_800C42FC.cpp: comment:0
+	.text       start:0x800C42FC end:0x800D0C10
+
+game/tu_800D0C10.cpp: comment:0
+	.text       start:0x800D0C10 end:0x800D1270
+
+game/tu_800D1270.cpp: comment:0
+	.text       start:0x800D1270 end:0x800D17C0
+
+game/tu_800D17C0.cpp: comment:0
+	.text       start:0x800D17C0 end:0x800D58A0
+
+game/tu_800D58A0.cpp: comment:0
+	.text       start:0x800D58A0 end:0x800D7488
+
+game/tu_800D7488.cpp: comment:0
+	.text       start:0x800D7488 end:0x800D7CF4
+
+game/tu_800D7CF4.cpp: comment:0
+	.text       start:0x800D7CF4 end:0x800D7DA8
+
+game/tu_800D7DA8.cpp: comment:0
+	.text       start:0x800D7DA8 end:0x800D8878
+
+game/tu_800D8878.cpp: comment:0
+	.text       start:0x800D8878 end:0x800DA83C
+
+game/tu_800DA83C.cpp: comment:0
+	.text       start:0x800DA83C end:0x800DAE6C
+
+game/tu_800DAE6C.cpp: comment:0
+	.text       start:0x800DAE6C end:0x800DBD6C
+
+game/tu_800DBD6C.cpp: comment:0
+	.text       start:0x800DBD6C end:0x800E04C0
+
+game/tu_800E04C0.cpp: comment:0
+	.text       start:0x800E04C0 end:0x800E0B48
+
+game/tu_800E0B48.cpp: comment:0
+	.text       start:0x800E0B48 end:0x800E1538
+
+game/tu_800E1538.cpp: comment:0
+	.text       start:0x800E1538 end:0x800E17A4
+
+game/tu_800E17A4.cpp: comment:0
+	.text       start:0x800E17A4 end:0x800E1BEC
+
+game/tu_800E1BEC.cpp: comment:0
+	.text       start:0x800E1BEC end:0x800E216C
+
+game/tu_800E216C.cpp: comment:0
+	.text       start:0x800E216C end:0x800E5228
+
+game/tu_800E5228.cpp: comment:0
+	.text       start:0x800E5228 end:0x800EC3C0
+
+game/event.cpp: comment:0
+	.text       start:0x800EC3C0 end:0x800EC690
+
+game/tu_800EC690.cpp: comment:0
+	.text       start:0x800EC690 end:0x800ED618
+
+game/tu_800ED618.cpp: comment:0
+	.text       start:0x800ED618 end:0x800EE738
+
+game/tu_800EE738.cpp: comment:0
+	.text       start:0x800EE738 end:0x800EE850
+
+game/tu_800EE850.cpp: comment:0
+	.text       start:0x800EE850 end:0x800EF6D0
+
+game/tu_800EF6D0.cpp: comment:0
+	.text       start:0x800EF6D0 end:0x800F0BD8
+
+game/tu_800F0BD8.cpp: comment:0
+	.text       start:0x800F0BD8 end:0x800F0E68
+
+game/tu_800F0E68.cpp: comment:0
+	.text       start:0x800F0E68 end:0x800F14F8
+
+game/tu_800F14F8.cpp: comment:0
+	.text       start:0x800F14F8 end:0x800F1F10
+
+game/tu_800F1F10.cpp: comment:0
+	.text       start:0x800F1F10 end:0x800F2A9C
+
+game/tu_800F2A9C.cpp: comment:0
+	.text       start:0x800F2A9C end:0x800F37C4
+
+game/tu_800F37C4.cpp: comment:0
+	.text       start:0x800F37C4 end:0x800F39C4
+
+game/tu_800F39C4.cpp: comment:0
+	.text       start:0x800F39C4 end:0x800F3EEC
+
+game/tu_800F3EEC.cpp: comment:0
+	.text       start:0x800F3EEC end:0x800F3F88
+
+game/tu_800F3F88.cpp: comment:0
+	.text       start:0x800F3F88 end:0x800F4020
+
+game/tu_800F4020.cpp: comment:0
+	.text       start:0x800F4020 end:0x800F4FB4
+
+game/tu_800F4FB4.cpp: comment:0
+	.text       start:0x800F4FB4 end:0x800F6044
+
+game/tu_800F6044.cpp: comment:0
+	.text       start:0x800F6044 end:0x800F7688
+
+game/soundmgr.cpp: comment:0
+	.text       start:0x800F7688 end:0x800F8F74
+
+game/tu_800F8F74.cpp: comment:0
+	.text       start:0x800F8F74 end:0x800F995C
+
+game/tu_800F995C.cpp: comment:0
+	.text       start:0x800F995C end:0x800FA620
+
+game/tu_800FA620.cpp: comment:0
+	.text       start:0x800FA620 end:0x800FAD90
+
+game/tu_800FAD90.cpp: comment:0
+	.text       start:0x800FAD90 end:0x800FB0B0
+
+game/tu_800FB0B0.cpp: comment:0
+	.text       start:0x800FB0B0 end:0x800FB748
+
+game/tu_800FB748.cpp: comment:0
+	.text       start:0x800FB748 end:0x800FB820
+
+game/tu_800FB820.cpp: comment:0
+	.text       start:0x800FB820 end:0x8010948C
+
+game/tu_8010948C.cpp: comment:0
+	.text       start:0x8010948C end:0x8010CFB8
+
+game/tu_8010CFB8.cpp: comment:0
+	.text       start:0x8010CFB8 end:0x8011B590
+
+game/tu_8011B590.cpp: comment:0
+	.text       start:0x8011B590 end:0x8011CD10
+
+game/tu_8011CD10.cpp: comment:0
+	.text       start:0x8011CD10 end:0x801208EC
+
+game/tu_801208EC.cpp: comment:0
+	.text       start:0x801208EC end:0x801211E4
+
+game/tu_801211E4.cpp: comment:0
+	.text       start:0x801211E4 end:0x80122B2C
+
+game/tu_80122B2C.cpp: comment:0
+	.text       start:0x80122B2C end:0x80124394
+
+game/tu_80124394.cpp: comment:0
+	.text       start:0x80124394 end:0x80126E30
+
+game/tu_80126E30.cpp: comment:0
+	.text       start:0x80126E30 end:0x8012813C
+
+game/tu_8012813C.cpp: comment:0
+	.text       start:0x8012813C end:0x80128DD0
+
+game/tu_80128DD0.cpp: comment:0
+	.text       start:0x80128DD0 end:0x8012901C
+
+game/tu_8012901C.cpp: comment:0
+	.text       start:0x8012901C end:0x80129950
+
+game/tu_80129950.cpp: comment:0
+	.text       start:0x80129950 end:0x80129DD8
+
+game/tu_80129DD8.cpp: comment:0
+	.text       start:0x80129DD8 end:0x8012B51C
+
+game/tu_8012B51C.cpp: comment:0
+	.text       start:0x8012B51C end:0x8012F928
+
+game/tu_8012F928.cpp: comment:0
+	.text       start:0x8012F928 end:0x8013008C
+
+game/tu_8013008C.cpp: comment:0
+	.text       start:0x8013008C end:0x801356F8
+
+game/tu_801356F8.cpp: comment:0
+	.text       start:0x801356F8 end:0x801361E8
+
+game/tu_801361E8.cpp: comment:0
+	.text       start:0x801361E8 end:0x80136EEC
+
+game/tu_80136EEC.cpp: comment:0
+	.text       start:0x80136EEC end:0x80137D94
+
+game/tu_80137D94.cpp: comment:0
+	.text       start:0x80137D94 end:0x8013863C
+
+game/tu_8013863C.cpp: comment:0
+	.text       start:0x8013863C end:0x8013A9C4
+
+game/tu_8013A9C4.cpp: comment:0
+	.text       start:0x8013A9C4 end:0x8013C598
+
+game/tu_8013C598.cpp: comment:0
+	.text       start:0x8013C598 end:0x8013E470
+
+game/tu_8013E470.cpp: comment:0
+	.text       start:0x8013E470 end:0x8013F65C
+
+game/tu_8013F65C.cpp: comment:0
+	.text       start:0x8013F65C end:0x801411AC
+
+game/tu_801411AC.cpp: comment:0
+	.text       start:0x801411AC end:0x801424A0
+
+game/tu_801424A0.cpp: comment:0
+	.text       start:0x801424A0 end:0x80144A2C
+
+game/tu_80144A2C.cpp: comment:0
+	.text       start:0x80144A2C end:0x80145434
+
+game/tu_80145434.cpp: comment:0
+	.text       start:0x80145434 end:0x80145918
+
+game/tu_80145918.cpp: comment:0
+	.text       start:0x80145918 end:0x80145DB8
+
+game/tu_80145DB8.cpp: comment:0
+	.text       start:0x80145DB8 end:0x801461F4
+
+game/tu_801461F4.cpp: comment:0
+	.text       start:0x801461F4 end:0x80146314
+
+game/tu_80146314.cpp: comment:0
+	.text       start:0x80146314 end:0x801466A8
+
+game/tu_801466A8.cpp: comment:0
+	.text       start:0x801466A8 end:0x80147320
+
+game/tu_80147320.cpp: comment:0
+	.text       start:0x80147320 end:0x8014841C
+
+game/tu_8014841C.cpp: comment:0
+	.text       start:0x8014841C end:0x80149160
+
+game/tu_80149160.cpp: comment:0
+	.text       start:0x80149160 end:0x80149600
+
+game/tu_80149600.cpp: comment:0
+	.text       start:0x80149600 end:0x80149CC4
+
+game/tu_80149CC4.cpp: comment:0
+	.text       start:0x80149CC4 end:0x8014AD38
+
+game/tu_8014AD38.cpp: comment:0
+	.text       start:0x8014AD38 end:0x8014B888
+
+game/tu_8014B888.cpp: comment:0
+	.text       start:0x8014B888 end:0x8014D6C8
+
+game/tu_8014D6C8.cpp: comment:0
+	.text       start:0x8014D6C8 end:0x8014E040
+
+game/tu_8014E040.cpp: comment:0
+	.text       start:0x8014E040 end:0x8014E1B8
+
+game/tu_8014E1B8.cpp: comment:0
+	.text       start:0x8014E1B8 end:0x8014E304
+
+game/tu_8014E304.cpp: comment:0
+	.text       start:0x8014E304 end:0x8014EA74
+
+game/tu_8014EA74.cpp: comment:0
+	.text       start:0x8014EA74 end:0x80153994
+
+game/tu_80153994.cpp: comment:0
+	.text       start:0x80153994 end:0x80153E20
+
+game/tu_80153E20.cpp: comment:0
+	.text       start:0x80153E20 end:0x80153EE8
+
+game/tu_80153EE8.cpp: comment:0
+	.text       start:0x80153EE8 end:0x801552A4
+
+game/tu_801552A4.cpp: comment:0
+	.text       start:0x801552A4 end:0x8015690C
+
+game/tu_8015690C.cpp: comment:0
+	.text       start:0x8015690C end:0x8015743C
+
+game/tu_8015743C.cpp: comment:0
+	.text       start:0x8015743C end:0x80157578
+
+game/tu_80157578.cpp: comment:0
+	.text       start:0x80157578 end:0x801576E0
+
+game/tu_801576E0.cpp: comment:0
+	.text       start:0x801576E0 end:0x801577F4
+
+game/tu_801577F4.cpp: comment:0
+	.text       start:0x801577F4 end:0x80157F1C
+
+game/tu_80157F1C.cpp: comment:0
+	.text       start:0x80157F1C end:0x8015A1F4
+
+game/tu_8015A1F4.cpp: comment:0
+	.text       start:0x8015A1F4 end:0x8015A95C
+
+game/tu_8015A95C.cpp: comment:0
+	.text       start:0x8015A95C end:0x8015BEEC
+
+game/tu_8015BEEC.cpp: comment:0
+	.text       start:0x8015BEEC end:0x8015E9CC
+
+game/tu_8015E9CC.cpp: comment:0
+	.text       start:0x8015E9CC end:0x8015FABC
+
+game/tu_8015FABC.cpp: comment:0
+	.text       start:0x8015FABC end:0x8016000C
+
+game/tu_8016000C.cpp: comment:0
+	.text       start:0x8016000C end:0x80160914
+
+game/tu_80160914.cpp: comment:0
+	.text       start:0x80160914 end:0x80161350
+
+game/tu_80161350.cpp: comment:0
+	.text       start:0x80161350 end:0x80164700
+
+game/tu_80164700.cpp: comment:0
+	.text       start:0x80164700 end:0x801650B0
+
+game/tu_801650B0.cpp: comment:0
+	.text       start:0x801650B0 end:0x8016761C
+
+game/tu_8016761C.cpp: comment:0
+	.text       start:0x8016761C end:0x80167D84
+
+game/tu_80167D84.cpp: comment:0
+	.text       start:0x80167D84 end:0x801681D4
+
+game/tu_801681D4.cpp: comment:0
+	.text       start:0x801681D4 end:0x80168788
+
+game/tu_80168788.cpp: comment:0
+	.text       start:0x80168788 end:0x8016A70C
+
+game/tu_8016A70C.cpp: comment:0
+	.text       start:0x8016A70C end:0x8016CB64
+
+game/tu_8016CB64.cpp: comment:0
+	.text       start:0x8016CB64 end:0x8016D618
+
+game/tu_8016D618.cpp: comment:0
+	.text       start:0x8016D618 end:0x8016DAF0
+
+game/tu_8016DAF0.cpp: comment:0
+	.text       start:0x8016DAF0 end:0x8016E230
+
+game/tu_8016E230.cpp: comment:0
+	.text       start:0x8016E230 end:0x8016E5FC
+
+game/tu_8016E5FC.cpp: comment:0
+	.text       start:0x8016E5FC end:0x80172D40
+
+game/tu_80172D40.cpp: comment:0
+	.text       start:0x80172D40 end:0x8017449C
+
+game/tu_8017449C.cpp: comment:0
+	.text       start:0x8017449C end:0x801746A4
+
+game/tu_801746A4.cpp: comment:0
+	.text       start:0x801746A4 end:0x8017660C
+
+game/tu_8017660C.cpp: comment:0
+	.text       start:0x8017660C end:0x80176FE8
+
+game/tu_80176FE8.cpp: comment:0
+	.text       start:0x80176FE8 end:0x80177BE4
+
+game/tu_80177BE4.cpp: comment:0
+	.text       start:0x80177BE4 end:0x80179D28
+
+game/tu_80179D28.cpp: comment:0
+	.text       start:0x80179D28 end:0x8017A180
+
+game/tu_8017A180.cpp: comment:0
+	.text       start:0x8017A180 end:0x8017B720
+
+game/tu_8017B720.cpp: comment:0
+	.text       start:0x8017B720 end:0x8017CB00
+
+game/Skid.cpp: comment:0
+	.text       start:0x8017CB00 end:0x8017FB04
+
+game/tu_8017FB04.cpp: comment:0
+	.text       start:0x8017FB04 end:0x8018086C
+
+game/tu_8018086C.cpp: comment:0
+	.text       start:0x8018086C end:0x801823E8
+
+game/tu_801823E8.cpp: comment:0
+	.text       start:0x801823E8 end:0x80182AB8
+
+game/tu_80182AB8.cpp: comment:0
+	.text       start:0x80182AB8 end:0x80183D5C
+
+game/tu_80183D5C.cpp: comment:0
+	.text       start:0x80183D5C end:0x80183F44
+
+game/tu_80183F44.cpp: comment:0
+	.text       start:0x80183F44 end:0x80184E80
+
+game/tu_80184E80.cpp: comment:0
+	.text       start:0x80184E80 end:0x8018778C
+
+game/tu_8018778C.cpp: comment:0
+	.text       start:0x8018778C end:0x801879F0
+
+game/tu_801879F0.cpp: comment:0
+	.text       start:0x801879F0 end:0x80188234
+
+game/tu_80188234.cpp: comment:0
+	.text       start:0x80188234 end:0x80188560
+
+game/tu_80188560.cpp: comment:0
+	.text       start:0x80188560 end:0x8018FCC0
+
+game/tu_8018FCC0.cpp: comment:0
+	.text       start:0x8018FCC0 end:0x80190B00
+
+game/tu_80190B00.cpp: comment:0
+	.text       start:0x80190B00 end:0x80190F54
+
+game/tu_80190F54.cpp: comment:0
+	.text       start:0x80190F54 end:0x80192C2C
+
+game/tu_80192C2C.cpp: comment:0
+	.text       start:0x80192C2C end:0x801957EC
+
+game/tu_801957EC.cpp: comment:0
+	.text       start:0x801957EC end:0x80195F3C
+
+game/tu_80195F3C.cpp: comment:0
+	.text       start:0x80195F3C end:0x80198568
+
+game/tu_80198568.cpp: comment:0
+	.text       start:0x80198568 end:0x8019868C
+
+game/tu_8019868C.cpp: comment:0
+	.text       start:0x8019868C end:0x80198724
+
+game/tu_80198724.cpp: comment:0
+	.text       start:0x80198724 end:0x80198FF8
+
+game/tu_80198FF8.cpp: comment:0
+	.text       start:0x80198FF8 end:0x801A082C
+
+game/tu_801A082C.cpp: comment:0
+	.text       start:0x801A082C end:0x801A0A6C
+
+game/tu_801A0A6C.cpp: comment:0
+	.text       start:0x801A0A6C end:0x801A1830
+
+game/kernel.cpp: comment:0
+	.text       start:0x801A1830 end:0x801A1EA8
+
+game/tu_801A1EA8.cpp: comment:0
+	.text       start:0x801A1EA8 end:0x801A2294
+
+game/file.cpp: comment:0
+	.text       start:0x801A2294 end:0x801A307C
+
+game/tu_801A307C.cpp: comment:0
+	.text       start:0x801A307C end:0x801A3BB4
+
+game/tu_801A3BB4.cpp: comment:0
+	.text       start:0x801A3BB4 end:0x801A3C4C
+
+game/tu_801A3C4C.cpp: comment:0
+	.text       start:0x801A3C4C end:0x801A3E84
+
+game/tu_801A3E84.cpp: comment:0
+	.text       start:0x801A3E84 end:0x801A407C
+
+game/tu_801A407C.cpp: comment:0
+	.text       start:0x801A407C end:0x801A41B8
+
+game/tu_801A41B8.cpp: comment:0
+	.text       start:0x801A41B8 end:0x801A5938
+
+game/tu_801A5938.cpp: comment:0
+	.text       start:0x801A5938 end:0x801A5E2C
+
+game/tu_801A5E2C.cpp: comment:0
+	.text       start:0x801A5E2C end:0x801A60E4
+
+game/tu_801A60E4.cpp: comment:0
+	.text       start:0x801A60E4 end:0x801A7E60
+
+game/tu_801A7E60.cpp: comment:0
+	.text       start:0x801A7E60 end:0x801A9EF8
+
+game/tu_801A9EF8.cpp: comment:0
+	.text       start:0x801A9EF8 end:0x801AA258
+
+game/tu_801AA258.cpp: comment:0
+	.text       start:0x801AA258 end:0x801AAA04
+
+game/tu_801AAA04.cpp: comment:0
+	.text       start:0x801AAA04 end:0x801AB040
+
+game/tu_801AB040.cpp: comment:0
+	.text       start:0x801AB040 end:0x801AC40C
+
+dolphin/os/OSFont.c:
+	.text       start:0x801AD774 end:0x801AE788
+
+dolphin/gx/GXInit.c:
+	.text       start:0x801AEB60 end:0x801AFCB8
+
+dolphin/gx/GXFifo.c:
+	.text       start:0x801AFCB8 end:0x801B0CE8
+
+dolphin/gx/GXAttr.c:
+	.text       start:0x801B1578 end:0x801B26A8
+
+dolphin/gx/GXMisc.c:
+	.text       start:0x801B26F0 end:0x801B2FE0
+
+dolphin/gx/GXGeometry.c:
+	.text       start:0x801B33C0 end:0x801B3698
+
+dolphin/gx/GXFrameBuf.c:
+	.text       start:0x801B3698 end:0x801B45A0
+
+dolphin/gx/GXLight.c:
+	.text       start:0x801B45A0 end:0x801B4A38
+
+dolphin/gx/GXTexture.c:
+	.text       start:0x801B515C end:0x801B6BA4
+
+dolphin/gx/GXBump.c:
+	.text       start:0x801B6BA4 end:0x801B75B8
+
+dolphin/gx/GXTransform.c:
+	.text       start:0x801B8904 end:0x801B9318
+
+dolphin/gx/GXPerf.c:
+	.text       start:0x801B9BB0 end:0x801BA42C
+
+dolphin/mtx/mtx.c:
+	.text       start:0x801BA430 end:0x801BBD20
+
+dolphin/mtx/mtx44.c:
+	.text       start:0x801BBFAC end:0x801BCE18
+
+dolphin/mtx/vec.c:
+	.text       start:0x801BD390 end:0x801BDA30
+
+dolphin/ai/ai.c:
+	.text       start:0x801BDAC0 end:0x801BE46C
+
+dolphin/ar/ar.c:
+	.text       start:0x801BE474 end:0x801BF4C4
+
+dolphin/ar/arq.c:
+	.text       start:0x801BF4C4 end:0x801BFBA0
+
+dolphin/card/CARDBios.c:
+	.text       start:0x801BFBAC end:0x801C1378
+
+dolphin/card/CARDRdwr.c:
+	.text       start:0x801C13C8 end:0x801C1660
+
+dolphin/card/CARDBlock.c:
+	.text       start:0x801C1804 end:0x801C1A64
+
+dolphin/card/CARDDir.c:
+	.text       start:0x801C1C04 end:0x801C1CC8
+
+dolphin/card/CARDCheck.c:
+	.text       start:0x801C1CC8 end:0x801C2CB4
+
+dolphin/card/CARDMount.c:
+	.text       start:0x801C2CB4 end:0x801C3800
+
+dolphin/card/CARDFormat.c:
+	.text       start:0x801C3800 end:0x801C4080
+
+dolphin/card/CARDOpen.c:
+	.text       start:0x801C4080 end:0x801C462C
+
+dolphin/card/CARDCreate.c:
+	.text       start:0x801C4634 end:0x801C49CC
+
+dolphin/card/CARDRead.c:
+	.text       start:0x801C49CC end:0x801C4ED0
+
+dolphin/card/CARDWrite.c:
+	.text       start:0x801C50F0 end:0x801C5204
+
+dolphin/card/CARDDelete.c:
+	.text       start:0x801C524C end:0x801C5574
+
+dolphin/card/CARDStat.c:
+	.text       start:0x801C55BC end:0x801C5A54
+
+dolphin/card/CARDNet.c:
+	.text       start:0x801C5AB4 end:0x801C5C4C
+
+dolphin/card/CARDUnlock.c:
+	.text       start:0x801C5D48 end:0x801C7310
+
+dolphin/ax/AXAlloc.c:
+	.text       start:0x801C76D0 end:0x801C7F64
+
+dolphin/ax/AXAux.c:
+	.text       start:0x801C7F64 end:0x801C83EC
+
+dolphin/ax/AXCL.c:
+	.text       start:0x801C840C end:0x801C8B34
+
+dolphin/ax/AXOut.c:
+	.text       start:0x801C8B5C end:0x801C921C
+
+dolphin/ax/AXSPB.c:
+	.text       start:0x801C9230 end:0x801C9760
+
+dolphin/ax/AXVPB.c:
+	.text       start:0x801CA15C end:0x801CAF20
+
+dolphin/ax/AXProf.c:
+	.text       start:0x801CAF38 end:0x801CAFE8
+
+dolphin/dtk/dtk.c:
+	.text       start:0x801CAFE8 end:0x801CBDD8
+
+game/tu_801CBFCC.cpp: comment:0
+	.text       start:0x801CBFCC end:0x801CE7B0
+
+game/tu_801CE7B0.cpp: comment:0
+	.text       start:0x801CE7B0 end:0x801D3078
+
+game/tu_801D3078.cpp: comment:0
+	.text       start:0x801D3078 end:0x801D34C4
+
+game/tu_801D34C4.cpp: comment:0
+	.text       start:0x801D34C4 end:0x801D3AF8
+
+game/tu_801D3AF8.cpp: comment:0
+	.text       start:0x801D3AF8 end:0x801D41F4
+
+game/tu_801D41F4.cpp: comment:0
+	.text       start:0x801D41F4 end:0x801D44B8
+
+game/tu_801D44B8.cpp: comment:0
+	.text       start:0x801D44B8 end:0x801D4744
+
+game/tu_801D4744.cpp: comment:0
+	.text       start:0x801D4744 end:0x801D4868
+
+game/tu_801D4868.cpp: comment:0
+	.text       start:0x801D4868 end:0x801D4EA4
+
+game/tu_801D4EA4.cpp: comment:0
+	.text       start:0x801D4EA4 end:0x801D5F54
+
+game/tu_801D5F54.cpp: comment:0
+	.text       start:0x801D5F54 end:0x801D74EC
+
+game/tu_801D74EC.cpp: comment:0
+	.text       start:0x801D74EC end:0x801D905C
+
+game/tu_801D905C.cpp: comment:0
+	.text       start:0x801D905C end:0x801DB7D0
+
+game/tu_801DB7D0.cpp: comment:0
+	.text       start:0x801DB7D0 end:0x801DDE24
+
+game/tu_801DDE24.cpp: comment:0
+	.text       start:0x801DDE24 end:0x801DEEEC
+
+game/tu_801DEEEC.cpp: comment:0
+	.text       start:0x801DEEEC end:0x801DFD20
+
+game/tu_801DFD20.cpp: comment:0
+	.text       start:0x801DFD20 end:0x801E10A4
+
+game/tu_801E10A4.cpp: comment:0
+	.text       start:0x801E10A4 end:0x801E16C8
+
+game/tu_801E16C8.cpp: comment:0
+	.text       start:0x801E16C8 end:0x801E1E44
+
+dolphin/si/SISteering.c:
+	.text       start:0x801E3DD8 end:0x801E4064
+
+dolphin/si/SISteeringXfer.c:
+	.text       start:0x801E4118 end:0x801E4438
+
+dolphin/si/SISteeringAuto.c:
+	.text       start:0x801E4438 end:0x801E47A4
+
+dolphin/dsp/dsp.c:
+	.text       start:0x801E47D8 end:0x801E4B50
+
+dolphin/dsp/dsp_debug.c:
+	.text       start:0x801E4B50 end:0x801E4BA0
+
+dolphin/dsp/dsp_task.c:
+	.text       start:0x801E4BA8 end:0x801E54A4
