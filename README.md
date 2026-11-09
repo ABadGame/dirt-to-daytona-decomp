@@ -12,8 +12,9 @@ port is a later, separate step: it needs replacements for the GameCube hardware 
 
 - `ninja` splits the DOL and relinks it into a **byte-identical `main.dol`**
   (SHA-1 `729179d684034f46e5f4e562244ad1996e390a93`).
-- **10,614 functions** were found automatically. **178 are named** (Dolphin SDK and the
-  ProDG/GCC runtime), along with ~80 SDK data objects. None are decompiled yet.
+- **10,614 functions** were found automatically. **888 are named**: the Dolphin SDK
+  (about 75%, 62% and 86% of the bytes in its three blocks) and the ProDG/GCC runtime,
+  along with ~300 SDK data objects. None are decompiled yet.
 - All code is still in one automatic unit per section (`auto_*`). Splitting into real
   source files (`dash.cpp`, `race.cpp`, …) is still to come.
 
@@ -127,7 +128,13 @@ These let the template (built around Metrowerks) handle a ProDG binary.
    The proper fix is to link with ProDG's `ngcld.exe` (in `build/compilers/ProDG/*`)
    instead of `mwldeppc.exe`. Then these blocks can go, and `.ctdt` can be split into
    real `.ctors`/`.dtors` input sections.
-6. **Linker script template.** [config/GN2E70/ldscript.tpl](config/GN2E70/ldscript.tpl)
+6. **Unique names for per-file statics.** Some SDK files each have a static with the same
+   name (`ResetFunctionInfo`, `BootInfo`). With every function still in one object,
+   identical local names make dtk split the data sections and crash the Metrowerks linker.
+   They're temporarily named `ResetFunctionInfo_OSMemory`, `ResetFunctionInfo_SISteering`,
+   `BootInfo_OS` and `BootInfo_DVDFs`, and can go back to the original names once the code
+   is split into real files.
+7. **Linker script template.** [config/GN2E70/ldscript.tpl](config/GN2E70/ldscript.tpl)
    reproduces ProDG's stack and arena layout (`_stack_end = 0x80315E60`,
    `_stack_addr = 0x80375E60`, `__ArenaLo = 0x80375E80`, no debugger stack). Once
    `OSInit` was named, dtk started emitting relocations to these symbols, and the
@@ -141,7 +148,19 @@ All of these live in `tools/gn2e70/` and run from the project root after a build
   start (dtk normally only tries them from fixed anchor points), then follows each match's
   relocations to name callees and data. Conflicting or tiny (< 6 instruction) matches are
   skipped. `--apply` only renames auto-generated `fn_`/`lbl_` symbols.
+- `build_sdk.sh` + `objsigscan.py OBJ_DIR... [--apply]`: the main SDK naming pass.
+  `build_sdk.sh` compiles a Dolphin SDK decompilation
+  ([dolsdk2001](https://github.com/doldecomp/dolsdk2001) with CodeWarrior 1.2.5, and
+  [dolsdk2004](https://github.com/doldecomp/dolsdk2004) with 1.2.5n at
+  `SDK_REVISION` 0, 1 and 2) using the release flags from their Makefiles. Usage is in
+  the script header. `objsigscan.py` then matches every compiled function against
+  same-size game functions, with relocated fields masked out, and follows the matches'
+  relocations to name callees and data. On the first run it matched 1,306 functions and
+  contradicted none of the 105 names we already had. It never applies names the
+  Metrowerks linker reserves (`_ctors`, `_dtors`, `__ArenaLo`…).
 - `manual_names.txt` + `apply_names.py`: hand-identified names, each with its evidence.
+  The file also records corrections, for example `0x800471E8` is `__fini_cpp`, which dtk's
+  own signature had mislabeled as `__init_cpp`.
   Add a line and rerun the script.
 - `xrefs.py [--grep REGEX]`: per-function table of referenced strings and callees
   (writes `build/GN2E70/xrefs.json` with `--json`). Useful for finding functions by
@@ -153,11 +172,11 @@ All of these live in `tools/gn2e70/` and run from the project root after a build
 ## Roadmap
 
 1. ~~**Initial analysis:** generate symbols and splits, get a matching relink.~~ Done.
-2. **Identify the SDK:** *in progress.* Library regions are mapped, and the core OS, DVD,
-   EXI, SI, DB, GX-init and GCC-runtime functions are named. Still to do: the rest of
-   GX, CARD, PAD, AI/AR/ARQ/AX/DSP and MTX. The likely approach is building matching
-   signatures from a 2002-era Dolphin SDK decompilation with the Metrowerks compilers
-   already in `build/compilers/GC`.
+2. **Identify the SDK:** *mostly done.* 888 functions are named across OS, DVD, EXI,
+   SI/PAD, DB, VI, GX, CARD, AI, AR/ARQ, AX, DTK, DSP and MTX. What's left is functions
+   where this June 2002 SDK differs from both the 2001 and 2004 decomps. The largest gap
+   is 30 GX functions at `0x801B75B8`–`0x801B8884`. Those need fuzzy matching or
+   identification by hand.
 3. **Pin down the ProDG version:** compile small test functions with each ProDG version
    and compare them with the original.
 4. **ProDG link step:** switch from `mwldeppc` to `ngcld` and remove workaround 5.

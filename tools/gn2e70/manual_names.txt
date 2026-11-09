@@ -10,3 +10,10 @@
 8024F768 __terminate_func      # .data pointer, initialized to __default_terminate
 8003C4C4 __sjthrow             # GCC 2.95 sjlj throw: walks dynamic handler chain, else __terminate
 8003C678 __sjpopnthrow         # pops a handler then tail-calls __sjthrow
+# Corrections (already applied in symbols.txt; recorded here for reference):
+#   80047194 __init_cpp  - walks _ctors (0x8024EE50); MW __ppc_eabi_init order
+#   800471E8 __fini_cpp  - walks _dtors (0x8024EE58); dtk's signature had named it __init_cpp
+#   ResetFunctionInfo at 802506D8 and 8025B788 are per-library statics: scope:local
+#   Same-named per-file statics, renamed uniquely until real splits exist:
+#   802506D8 ResetFunctionInfo_OSMemory, 8025B788 ResetFunctionInfo_SISteering,
+#   80314738 BootInfo_OS, 803147F0 BootInfo_DVDFs
