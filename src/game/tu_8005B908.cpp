@@ -35,9 +35,15 @@ struct AIEntry {
     float e;  // 0x10
 };
 
+struct CarEngine;  // at CarInfo+0x14F8; fn_800BF5C8 returns its power in watts
+
 struct CarInfo {
-    char pad[0x600];
-    int id;  // 0x600
+    char pad[0xC];
+    int tag;      // 0x00C; 'ACAR' for AI cars
+    char padC[0x600 - 0x10];
+    int id;       // 0x600
+    char pad604[0x14F8 - 0x604];
+    char engine[4];  // 0x14F8 (start of a CarEngine)
 };
 
 // Global AI data at 0x80276A48 (dtk splits it into several lbl_ symbols).
@@ -196,6 +202,8 @@ void fn_801A2028(const char* fmt, ...);     // fatal error ("PANIC")
 const char* fn_8005BBBC(int level);
 
 float fn_80057784(int curve, float a, float b);
+float fn_800BF5C8(void* engine);   // engine power in watts
+unsigned int fn_80073988(int arg); // player's car slot
 int vsprintf(char* buf, const char* fmt, va_list args);
 void fn_80129AE0(int a, int b, char* text, int c);
 void fn_80064108(int arg, int track);
@@ -718,6 +726,73 @@ void fn_8005BBF4(void) {
         }
     }
     fn_8005B884(table);
+}
+
+// AI strength presets 0-4: {mode, value}.
+struct StrengthPreset {
+    int mode;
+    float value;
+};
+static const StrengthPreset kStrengthPresets[5] = {
+    {0, 0.0f}, {0, 0.5f}, {0, 1.0f}, {1, 0.5f}, {1, 1.0f},
+};
+
+// Converts an AI strength setting to a mode and a 0-1 value. Strength 5 adapts to the
+// player's skill rating.
+// @target 8005C098
+void fn_8005C098(int* mode, float* value, int strength, int playerSkill) {
+    if (strength <= 4) {
+        *mode = kStrengthPresets[strength].mode;
+        *value = kStrengthPresets[strength].value;
+    } else if (strength == 5) {
+        float top = fn_8005BB20(100);
+        float low = 0.1f;
+        float mid = low + (top - low) * 0.5f;
+        float skill = fn_8005BB20(playerSkill);
+        if (!(skill >= mid)) {
+            *mode = 0;
+            *value = (skill - low) / (mid - low);
+        } else {
+            *mode = 1;
+            *value = (skill - mid) / (top - mid);
+        }
+    } else {
+        fn_801A2028("Unrecognized AI Strength %d", strength);
+        *mode = 0;
+        *value = 0.0f;
+    }
+}
+
+// Sets the AI's extra starting power from the player's and an AI car's horsepower.
+// NOT MATCHING yet: one extra branch. The original places the loop's increment/fetch
+// block before the "found" code, so the found code falls straight into the epilogue.
+// @target 8005DF84
+void fn_8005DF84(void) {
+    for (int i = 0; i < 48; i++) {
+        AIObject* obj = lbl_80276E38[i];
+        if (obj) {
+            fn_80064108(lbl_80251C10, obj->track);
+        }
+    }
+    lbl_80276A00.f4 = 1.0f;
+    unsigned int slot = fn_80073988(0);
+    if (slot <= 47) {
+        CarInfo* player = fn_800738D8(slot);
+        CarInfo* car;
+        for (int i = 0; (car = fn_800738D8(i)) != 0; i++) {
+            if (car->tag == 0x41434152) {  // 'ACAR'
+                float playerPower = fn_800BF5C8(player->engine);
+                float aiPower = fn_800BF5C8(car->engine);
+                float ratio = playerPower / aiPower;
+                float effect = fn_8005E29C("power_factor_hp_effect", 1.0f);
+                lbl_80276A00.f4 = 1.0f + (ratio - 1.0f) * effect;
+                fn_801A1F68("extra start power ratio %.3f; player %.3f hp, ai %.3f hp",
+                            lbl_80276A00.f4, playerPower * (1.0f / 746.0f),
+                            aiPower * (1.0f / 746.0f));
+                break;
+            }
+        }
+    }
 }
 
 }  // extern "C"
